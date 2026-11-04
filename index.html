@@ -116,11 +116,12 @@ section { padding-block: 84px; }
 .live { color: var(--rose); font: 500 11.5px var(--f-mono); letter-spacing: .12em; display: inline-flex; align-items: center; gap: 8px; background: rgba(244, 195, 207, .35); padding: 5px 12px; border-radius: 999px; }
 .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .ship-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-size: 15px; align-content: center; }
-.ship-list li { display: grid; grid-template-columns: 22px 1fr; gap: 6px; }
-.ship-list li::before { content: "✦"; color: var(--rose); font-size: 11px; padding-top: 4px; }
+.ship-list li { position: relative; padding-left: 24px; }
+.ship-list li::before { content: "✦"; position: absolute; left: 2px; top: 4px; color: var(--rose); font-size: 11px; line-height: 1; }
 .ship-list b { font-weight: 600; color: var(--ink); }
 .ship-list.small { font-size: 14.5px; gap: 8px; margin-block: 10px 4px; color: var(--ink); }
-.ship-list.small li::before { font-size: 9px; padding-top: 5px; }
+.ship-list.small li { padding-left: 20px; }
+.ship-list.small li::before { font-size: 9px; top: 5px; }
 .proj-stack { font: 12px var(--f-mono); color: var(--mocha); margin-bottom: 20px; }
 .proj-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 15px; font-weight: 600; }
 .btn.small { padding: 10px 18px; font-size: 14px; }
@@ -172,7 +173,7 @@ section { padding-block: 84px; }
 .polaroid:nth-child(3) { transform: rotate(-1.5deg); }
 .polaroid:nth-child(1) img { object-position: 72% 50%; }
 .polaroid:hover { transform: rotate(0) translateY(-4px); }
-.polaroid img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3px; background: var(--bg-2); max-width: 100%; }
+.polaroid img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 3px; background: var(--bg-2); max-width: 100%; }
 .polaroid figcaption { font: 500 19px var(--f-hand); color: var(--mocha); text-align: center; padding-block: 8px 6px; }
 footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted); text-align: center; }
 
@@ -329,11 +330,11 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
     <div class="gallery-wrap">
       <div class="gallery">
         <figure class="polaroid">
-          <img src="photos/desk.jpg" alt="Avital smiling at her desk next to her laptop" loading="lazy" width="618" height="1100">
+          <img src="photos/desk.jpg" alt="Avital smiling at her desk next to her laptop" loading="lazy">
           <figcaption>where the code happens</figcaption>
         </figure>
         <figure class="polaroid">
-          <img src="photos/graduation.jpg" alt="Avital on stage at the 2025 graduation ceremony holding her B.Sc. diploma" loading="lazy" width="825" height="1100">
+          <img src="photos/graduation.jpg" alt="Avital on stage at the 2025 graduation ceremony holding her B.Sc. diploma" loading="lazy">
           <figcaption>B.Sc. in Computer Science</figcaption>
         </figure>
         <figure class="polaroid">
