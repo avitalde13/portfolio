@@ -118,11 +118,17 @@ section { padding-block: 84px; }
 .ship-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; font-size: 15px; align-content: center; }
 .ship-list li { display: grid; grid-template-columns: 22px 1fr; gap: 6px; }
 .ship-list li::before { content: "✦"; color: var(--rose); font-size: 11px; padding-top: 4px; }
+.ship-list b { font-weight: 600; color: var(--ink); }
+.ship-list.small { font-size: 14.5px; gap: 8px; margin-block: 10px 4px; color: var(--ink); }
+.ship-list.small li::before { font-size: 9px; padding-top: 5px; }
+.proj-stack { font: 12px var(--f-mono); color: var(--mocha); margin-bottom: 20px; }
+.proj-links { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; font-size: 15px; font-weight: 600; }
+.btn.small { padding: 10px 18px; font-size: 14px; }
 
 .projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .proj { padding: 24px 26px; border-radius: 26px; background: var(--card); border: 1px solid var(--line); display: grid; gap: 6px; align-content: start; min-width: 0; transition: transform .25s ease, box-shadow .25s ease; }
 .proj:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
-.proj:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+.proj:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .proj-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .proj h3 { font-size: 24px; }
 .proj .yr { font: 12px var(--f-mono); color: var(--muted); }
@@ -258,16 +264,22 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 
     <article class="featured">
       <div>
-        <span class="live">FEATURED PROJECT</span>
-        <h3>Nook Café</h3>
-        <p>A café website with a menu, a QR-code feedback system and a private owner dashboard.</p>
-        <a href="https://github.com/avitalde13/nook-cafe" target="_blank" rel="noopener">View repo ↗</a>
+        <span class="live">LIVE · FEATURED PROJECT</span>
+        <h3>Greenlight</h3>
+        <p>Approval and purchasing workflows for organizations. Employees submit purchases, expenses and time off, and each request moves through an approval chain like Manager → Finance → VP, with AI flagging the risky ones.</p>
+        <div class="proj-stack">Node.js · Express · PostgreSQL · Google OAuth · Claude API · Railway</div>
+        <div class="proj-links">
+          <a class="btn primary small" href="https://approval-workflows.up.railway.app" target="_blank" rel="noopener">Try the live demo ↗</a>
+          <a href="https://github.com/avitalde13/greenlight" target="_blank" rel="noopener">View repo ↗</a>
+        </div>
       </div>
       <ul class="ship-list">
-        <li>Feedback form guests reach from a QR code on each table</li>
-        <li>Owner dashboard with ratings and reviews</li>
-        <li>Owner login by email and password, hashed and rate-limited</li>
-        <li>Node.js, Express, PostgreSQL, deployed on Railway</li>
+        <li><b>Approval chains</b> up to 5 steps, with amount thresholds, send-back-for-changes and resubmit</li>
+        <li><b>Workspaces and roles:</b> Google sign-in, isolated companies, Admin, Manager and Employee permissions, email invites</li>
+        <li><b>Risk checks:</b> rules catch unusual amounts, new vendors, duplicates and split purchases; Claude rates risk and explains concerns</li>
+        <li><b>Budgets and money:</b> department budgets with 80% alerts, multi-currency with live exchange rates, spending dashboard and CSV export</li>
+        <li><b>Everyday flow:</b> reminders and escalation, out-of-office delegates, receipts, vacation balances and a team calendar</li>
+        <li><b>Notifications</b> by email, Slack and an in-app bell, plus a full audit log</li>
       </ul>
     </article>
 
@@ -285,7 +297,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
           <span class="skill">React</span><span class="skill">TypeScript</span><span class="skill">Node.js</span>
           <span class="skill">PostgreSQL</span><span class="skill">MongoDB</span><span class="skill">AWS</span>
           <span class="skill">Docker</span><span class="skill">Kubernetes</span><span class="skill">GitHub Actions</span>
-          <span class="skill">Jest</span><span class="skill">Python</span><span class="skill">Kotlin</span><span class="skill">Claude Code</span>
+          <span class="skill">Jest</span><span class="skill">Python</span><span class="skill">Kotlin</span><span class="skill">Claude API</span><span class="skill">Claude Code</span>
         </div>
       </div>
       <ul class="facts">
@@ -404,18 +416,71 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 
   /* ---------- projects ---------- */
   const projects = [
-    { name: 'Approval Workflows', year: '2026', blurb: 'Purchase, expense and time-off requests routed through approval chains like Manager → Finance → VP, with email alerts, roles and an audit log.', stack: 'Node.js · PostgreSQL · Google OAuth', url: 'https://github.com/avitalde13/approval-workflows' },
-    { name: 'Animal Clinic App', year: '2024', blurb: 'My B.Sc. final project: a full-stack web app for running an animal clinic.', stack: 'React · Node.js · PostgreSQL' },
-    { name: 'Cloud CI/CD Pipeline', year: '2024', blurb: 'A web app on AWS that builds, tests and deploys itself, with Selenium tests and code review on every pull request.', stack: 'AWS · Ansible · Docker · GitHub Actions' },
-    { name: 'Homly', year: '2023–24', blurb: 'A marketplace for selling and renting properties, with accounts, listings and asset management.', stack: 'React · TypeScript · Node.js · MongoDB' },
-    { name: 'TwoShop', year: '2024', blurb: 'An Android app for second-hand items, with posts, profiles and location-based listings on a map.', stack: 'Kotlin · MVVM · Firebase · Room', url: 'https://github.com/avitalde13/2Shop' },
+    {
+      name: 'Nook Café', year: '2026',
+      blurb: 'A café website with a menu, QR-code feedback and a private owner dashboard.',
+      features: [
+        'Landing page with live "Open now" hours and the latest guest comments',
+        'Full menu with prices and vegan / gluten-free tags',
+        'Feedback form from a table QR code, with rating and photo upload; phone numbers never shown publicly',
+        'Owner dashboard: average rating, star filter, delete',
+        'Owner login by email and password: scrypt hashing, forced first-password change, lockout after 5 tries',
+      ],
+      stack: 'Node.js · Express · PostgreSQL · Railway', url: 'https://github.com/avitalde13/nook-cafe',
+    },
+    {
+      name: 'Cloud CI/CD Pipeline', year: '2024', tag: 'DevOps final · team of 2',
+      blurb: 'A cloud web app that builds, tests and deploys itself with zero manual steps.',
+      features: [
+        'Infrastructure on AWS provisioned with Ansible',
+        'Services in Docker and Docker Compose',
+        'GitHub Actions workflows for build, test and deploy',
+        'Automated Selenium tests in Python run before every deploy',
+        'Pull requests and code review on every change',
+      ],
+      stack: 'AWS · Ansible · Docker · GitHub Actions · Selenium',
+    },
+    {
+      name: 'Homly', year: '2023–24',
+      blurb: 'A marketplace for selling and renting real-estate properties.',
+      features: [
+        'User registration and authentication',
+        'Property listings and asset management through a REST API',
+        'Users, listings and transactions stored in MongoDB',
+        'Responsive React + TypeScript interface built with MUI',
+      ],
+      stack: 'React · TypeScript · Node.js · Express · MongoDB',
+    },
+    {
+      name: 'TwoShop', year: '2024', tag: 'Android',
+      blurb: 'An Android app for buying and selling second-hand items.',
+      features: [
+        'Firebase Authentication for sign-up, login and sessions',
+        'Create, edit and delete posts; manage your profile',
+        'Location services and a map of items near you',
+        'MVVM with Room caching, LiveData and ViewModel',
+        'Navigation Component with SafeArgs, REST API integration, Material Design',
+      ],
+      stack: 'Kotlin · Firebase · Room · Google Maps', url: 'https://github.com/avitalde13/2Shop',
+    },
+    {
+      name: 'Animal Clinic App', year: '2024', tag: 'B.Sc. final project',
+      blurb: 'A full-stack web app for running an animal clinic.',
+      features: [
+        'React frontend',
+        'Node.js and Express backend',
+        'PostgreSQL database',
+      ],
+      stack: 'React · Node.js · Express · PostgreSQL',
+    },
   ];
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   document.getElementById('projects').innerHTML = projects.map(p => `
     <article class="proj">
-      <div class="proj-head"><h3>${esc(p.name)}</h3><span class="yr">${esc(p.year)}</span></div>
+      <div class="proj-head"><h3>${esc(p.name)}</h3><span class="yr">${esc(p.tag ? p.tag + ' · ' + p.year : p.year)}</span></div>
       <p>${esc(p.blurb)}</p>
-      <div class="proj-foot"><span>${esc(p.stack)}</span>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">Repo ↗</a>` : ''}</div>
+      <ul class="ship-list small">${p.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+      <div class="proj-foot"><span>${esc(p.stack)}</span>${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">Repo ↗</a>` : '<span>Code not public</span>'}</div>
     </article>`).join('');
 
   /* ---------- copy email / phone ---------- */
