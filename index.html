@@ -88,11 +88,14 @@ h1, h2, h3 { font-family: var(--f-display); font-variation-settings: "SOFT" 100;
 .console-bar .lights i { width: 9px; height: 9px; border-radius: 50%; background: var(--petal); display: block; }
 .console-bar .lights i:nth-child(2) { background: #f0d6c4; }
 .console-bar .lights i:nth-child(3) { background: #e3d3cf; }
-.asks { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 20px 4px; }
+.consoles { display: grid; gap: 18px; min-width: 0; }
+.console-purpose { margin: 0; padding: 14px 22px 0; font: 14.5px/1.55 var(--f-body); color: var(--ink); }
+.console.small .log { min-height: 0; }
+.asks { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 20px 4px; }
 .ask { font: 500 12px var(--f-mono); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; cursor: pointer; transition: background .2s, border-color .2s; }
 .ask:hover { border-color: var(--petal); }
 .ask[aria-pressed="true"] { background: var(--petal); border-color: var(--petal); }
-.log { padding: 10px 22px 22px; min-height: 220px; overflow-x: auto; color: var(--ink); }
+.log { padding: 10px 22px 20px; min-height: 172px; overflow-x: auto; color: var(--ink); }
 .log p { margin: 0; white-space: pre-wrap; }
 .log .p { color: var(--muted); }
 .log .c { color: var(--mocha); }
@@ -244,18 +247,36 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
       </div>
     </div>
 
-    <div class="console" aria-label="Interactive deploy console">
-      <div class="console-bar">
-        <span class="lights"><i></i><i></i><i></i></span>
-        <span>nook-cafe</span>
-        <span id="clock">IL time</span>
+    <div class="consoles">
+      <div class="console" data-console="greenlight" aria-label="Greenlight demo console">
+        <div class="console-bar">
+          <span class="lights"><i></i><i></i><i></i></span>
+          <span>greenlight</span>
+          <span id="clock">IL time</span>
+        </div>
+        <p class="console-purpose">Company approvals get lost in emails and spreadsheets. Greenlight puts every request in one place and sends it to the right people.</p>
+        <div class="asks" role="group" aria-label="Pick a question">
+          <button class="ask" data-k="route" aria-pressed="true">"Who approves this?"</button>
+          <button class="ask" data-k="risk" aria-pressed="false">"Is this risky?"</button>
+          <button class="ask" data-k="budget" aria-pressed="false">"Are we over budget?"</button>
+        </div>
+        <div class="log" aria-live="polite"></div>
       </div>
-      <div class="asks" role="group" aria-label="Pick a customer request">
-        <button class="ask" data-k="feedback" aria-pressed="true">"Guests can't leave feedback"</button>
-        <button class="ask" data-k="owner" aria-pressed="false">"I need to see reviews"</button>
-        <button class="ask" data-k="secure" aria-pressed="false">"Keep it private"</button>
+
+      <div class="console small" data-console="nook" aria-label="Nook Café demo console">
+        <div class="console-bar">
+          <span class="lights"><i></i><i></i><i></i></span>
+          <span>nook-cafe</span>
+          <span></span>
+        </div>
+        <p class="console-purpose">Guests leave feedback from a QR code on the table, and the café sees it all in one private dashboard.</p>
+        <div class="asks" role="group" aria-label="Pick a request">
+          <button class="ask" data-k="feedback" aria-pressed="true">"Guests can't leave feedback"</button>
+          <button class="ask" data-k="owner" aria-pressed="false">"I need to see reviews"</button>
+          <button class="ask" data-k="secure" aria-pressed="false">"Keep it private"</button>
+        </div>
+        <div class="log" aria-live="polite"></div>
       </div>
-      <div class="log" id="log" aria-live="polite"></div>
     </div>
   </div>
 
@@ -361,8 +382,28 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   };
   tick(); setInterval(tick, 30000);
 
-  /* ---------- console ---------- */
+  /* ---------- consoles ---------- */
   const scripts = {
+    route: [
+      ['p', '$ new request: laptop · $2,400 · hardware'],
+      ['c', '▸ chain: Manager → Finance (over $1,000)'],
+      ['c', '▸ email + Slack to the manager'],
+      ['c', '▸ manager approves → moves to Finance'],
+      ['g', '✔ approved, every step in the audit log'],
+    ],
+    risk: [
+      ['p', '$ new request: software · $4,950 · new vendor'],
+      ['c', '▸ rule: first time with this vendor'],
+      ['c', '▸ rule: just under the $5,000 VP limit'],
+      ['c', '▸ Claude: medium risk, "vague justification"'],
+      ['g', '✔ flagged for the approver to review'],
+    ],
+    budget: [
+      ['p', '$ expense: team offsite · $3,200'],
+      ['c', '▸ department budget: 84% used this quarter'],
+      ['c', '▸ 80% budget alert sent to Admins'],
+      ['g', '✔ approver sees it before deciding'],
+    ],
     feedback: [
       ['p', '$ claude "guests scan a QR code and leave a rating and comment"'],
       ['c', '▸ POST /api/feedback, public review list'],
@@ -385,7 +426,8 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
       ['g', '✔ locked down'],
     ],
   };
-  const log = document.getElementById('log');
+  document.querySelectorAll('[data-console]').forEach(box => {
+  const log = box.querySelector('.log');
   let run = 0;
   const caret = () => { const c = document.createElement('p'); c.innerHTML = '<span class="caret"></span>'; log.appendChild(c); };
   function render(key, animate) {
@@ -412,11 +454,13 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
     };
     next();
   }
-  document.querySelectorAll('.ask').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.ask').forEach(x => x.setAttribute('aria-pressed', x === b));
+  const asks = box.querySelectorAll('.ask');
+  asks.forEach(b => b.addEventListener('click', () => {
+    asks.forEach(x => x.setAttribute('aria-pressed', x === b));
     render(b.dataset.k, true);
   }));
-  render('feedback', false);
+  render(asks[0].dataset.k, false);
+  });
 
   /* ---------- projects ---------- */
   const projects = [
