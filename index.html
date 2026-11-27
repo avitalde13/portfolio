@@ -208,22 +208,27 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 }
 @media (prefers-reduced-motion: reduce) {
   .btn, .soc, .proj, .polaroid { transition: none; }
-  .voice .bars i { animation: none !important; }
+  .host.talking .host-face { animation: none; }
 }
-/* voice intro: a small floating pill */
-.voice { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: rgba(255, 252, 251, .92); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: opacity .4s ease, transform .4s ease; }
-.voice[hidden] { display: none; }
-.voice.gone { opacity: 0; transform: translate(-50%, 12px); pointer-events: none; }
-.voice-play { display: flex; align-items: center; gap: 10px; border: 0; cursor: pointer; background: var(--rose); color: #fff; font: 600 14px var(--f-body); padding: 9px 18px 9px 12px; border-radius: 999px; white-space: nowrap; }
-.voice-play .ic { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; font-size: 10px; }
-.voice .bars { display: none; gap: 2px; align-items: center; height: 14px; }
-.voice.playing .bars { display: flex; }
-.voice.playing .ic { display: none; }
-.voice .bars i { width: 3px; height: 100%; border-radius: 2px; background: #fff; animation: bar 1s ease-in-out infinite; }
-.voice .bars i:nth-child(2) { animation-delay: -.3s; } .voice .bars i:nth-child(3) { animation-delay: -.6s; } .voice .bars i:nth-child(4) { animation-delay: -.15s; }
-@keyframes bar { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
-.voice-x { border: 0; background: transparent; color: var(--muted); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; }
-.voice-x:hover { background: var(--bg-2); }
+/* AI host: a small round talking bubble in the corner */
+.host { position: fixed; z-index: 20; right: max(20px, env(safe-area-inset-right, 0px)); bottom: max(20px, env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: opacity .4s ease, transform .4s ease; }
+.host[hidden] { display: none; }
+.host.gone { opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; }
+.host-face { position: relative; width: 132px; height: 132px; border-radius: 50%; padding: 0; border: 3px solid #fff; overflow: hidden; cursor: pointer; background: var(--petal); box-shadow: 0 0 0 2px var(--petal), var(--shadow); }
+.host-face video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.host.talking .host-face { box-shadow: 0 0 0 2px var(--rose), var(--shadow); animation: halo 2.2s ease-in-out infinite; }
+@keyframes halo { 0%, 100% { box-shadow: 0 0 0 2px var(--rose), 0 0 0 0 rgba(199, 111, 138, .35), var(--shadow); } 50% { box-shadow: 0 0 0 2px var(--rose), 0 0 0 10px rgba(199, 111, 138, 0), var(--shadow); } }
+.host-tag { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); background: rgba(255, 252, 251, .9); color: var(--mocha); font: 600 10px var(--f-body); letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
+.host-bar { display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(255, 252, 251, .92); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.host-btn { border: 0; cursor: pointer; background: var(--rose); color: #fff; font: 600 13px var(--f-body); padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
+.host-x { border: 0; background: transparent; color: var(--muted); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 17px; line-height: 1; }
+.host-x:hover { background: var(--bg-2); }
+@media (max-width: 560px) {
+  .host { right: 14px; bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
+  .host-face { width: 96px; height: 96px; }
+  .host-tag { font-size: 9px; bottom: 5px; padding: 2px 6px; }
+  .host-btn { font-size: 12px; padding: 6px 12px; }
+}
 </style>
 
 </head>
@@ -357,14 +362,15 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   <footer><span class="spark">✦</span> Avital De-Bachar</footer>
 </div>
 
-<div class="voice" id="voice" role="region" aria-label="Audio introduction">
-  <button class="voice-play" id="voicePlay" type="button" aria-pressed="false">
-    <span class="ic" aria-hidden="true">▶</span>
-    <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-    <span id="voiceLabel">Hear a short intro</span>
+<div class="host" id="host" role="region" aria-label="Video introduction by an AI host">
+  <button class="host-face" id="hostFace" type="button" aria-label="Play the video introduction with sound">
+    <video id="hostVideo" src="audio/host.mp4" poster="audio/host.jpg" playsinline muted preload="auto"></video>
+    <span class="host-tag">AI host</span>
   </button>
-  <button class="voice-x" id="voiceClose" type="button" aria-label="Close audio introduction">×</button>
-  <audio id="voiceAudio" src="audio/intro.mp4" preload="auto"></audio>
+  <div class="host-bar">
+    <button class="host-btn" id="hostBtn" type="button">Tap to hear</button>
+    <button class="host-x" id="hostClose" type="button" aria-label="Close the video introduction">×</button>
+  </div>
 </div>
 
 <script>
@@ -451,28 +457,35 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
     try { navigator.clipboard.writeText(el.textContent).then(() => reset('Copied'), fallback); } catch (e) { fallback(); }
   }));
 
-  /* ---------- voice intro ---------- */
-  const voice = document.getElementById('voice');
-  const audio = document.getElementById('voiceAudio');
-  const play = document.getElementById('voicePlay');
-  const label = document.getElementById('voiceLabel');
-  audio.volume = 0.55;
-  const setState = s => {
-    voice.classList.toggle('playing', s === 'playing');
-    play.setAttribute('aria-pressed', s === 'playing');
-    label.textContent = s === 'playing' ? 'Pause' : s === 'paused' ? 'Resume intro' : s === 'ended' ? 'Play again' : 'Hear a short intro';
+  /* ---------- AI host ---------- */
+  const host = document.getElementById('host');
+  const vid = document.getElementById('hostVideo');
+  const btn = document.getElementById('hostBtn');
+  const label = t => { btn.textContent = t; };
+  const sync = () => {
+    host.classList.toggle('talking', !vid.paused && !vid.muted);
+    if (vid.ended) label('Play again');
+    else if (vid.muted) label('Tap to hear');
+    else label(vid.paused ? 'Resume' : 'Pause');
   };
-  audio.addEventListener('play', () => setState('playing'));
-  audio.addEventListener('pause', () => { if (!audio.ended) setState('paused'); });
-  audio.addEventListener('ended', () => setState('ended'));
-  play.addEventListener('click', () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
-  document.getElementById('voiceClose').addEventListener('click', () => {
-    audio.pause(); voice.classList.add('gone');
-    setTimeout(() => { voice.hidden = true; }, 400);
+  ['play', 'pause', 'ended', 'volumechange'].forEach(e => vid.addEventListener(e, sync));
+  vid.volume = 0.6;
+  const withSound = () => {
+    if (vid.muted || vid.ended) { vid.muted = false; vid.loop = false; vid.currentTime = 0; }
+    vid.play().catch(() => {});
+  };
+  const toggle = () => {
+    if (vid.muted || vid.ended || vid.paused) withSound(); else vid.pause();
+  };
+  document.getElementById('hostFace').addEventListener('click', toggle);
+  btn.addEventListener('click', toggle);
+  document.getElementById('hostClose').addEventListener('click', () => {
+    vid.pause(); host.classList.add('gone');
+    setTimeout(() => { host.hidden = true; }, 400);
   });
-  /* try to start on its own; browsers that block sound until a tap just show the button */
-  const p = audio.play();
-  if (p && p.catch) p.catch(() => setState('idle'));
+  /* start talking with sound if the browser allows it; otherwise play silently and wait for a tap */
+  vid.muted = false;
+  vid.play().then(sync).catch(() => { vid.muted = true; vid.loop = true; vid.play().catch(() => {}); sync(); });
 })();
 </script>
 </body>
