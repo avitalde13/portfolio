@@ -208,7 +208,22 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 }
 @media (prefers-reduced-motion: reduce) {
   .btn, .soc, .proj, .polaroid { transition: none; }
+  .voice .bars i { animation: none !important; }
 }
+/* voice intro: a small floating pill */
+.voice { position: fixed; z-index: 20; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 999px; background: rgba(255, 252, 251, .92); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: opacity .4s ease, transform .4s ease; }
+.voice[hidden] { display: none; }
+.voice.gone { opacity: 0; transform: translate(-50%, 12px); pointer-events: none; }
+.voice-play { display: flex; align-items: center; gap: 10px; border: 0; cursor: pointer; background: var(--rose); color: #fff; font: 600 14px var(--f-body); padding: 9px 18px 9px 12px; border-radius: 999px; white-space: nowrap; }
+.voice-play .ic { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.22); display: grid; place-items: center; font-size: 10px; }
+.voice .bars { display: none; gap: 2px; align-items: center; height: 14px; }
+.voice.playing .bars { display: flex; }
+.voice.playing .ic { display: none; }
+.voice .bars i { width: 3px; height: 100%; border-radius: 2px; background: #fff; animation: bar 1s ease-in-out infinite; }
+.voice .bars i:nth-child(2) { animation-delay: -.3s; } .voice .bars i:nth-child(3) { animation-delay: -.6s; } .voice .bars i:nth-child(4) { animation-delay: -.15s; }
+@keyframes bar { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+.voice-x { border: 0; background: transparent; color: var(--muted); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; }
+.voice-x:hover { background: var(--bg-2); }
 </style>
 
 </head>
@@ -253,7 +268,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 
   <section id="work">
     <div class="sec-title">
-      <h2>Watch my <em>work</em></h2>
+      <h2>See my <em>work</em></h2>
       <p>Things I've designed, built and shipped</p>
     </div>
 
@@ -342,6 +357,16 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   <footer><span class="spark">✦</span> Avital De-Bachar</footer>
 </div>
 
+<div class="voice" id="voice" role="region" aria-label="Audio introduction">
+  <button class="voice-play" id="voicePlay" type="button" aria-pressed="false">
+    <span class="ic" aria-hidden="true">▶</span>
+    <span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    <span id="voiceLabel">Hear a short intro</span>
+  </button>
+  <button class="voice-x" id="voiceClose" type="button" aria-label="Close audio introduction">×</button>
+  <audio id="voiceAudio" src="audio/intro.m4a" preload="auto"></audio>
+</div>
+
 <script>
 (() => {
 
@@ -425,6 +450,29 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
     };
     try { navigator.clipboard.writeText(el.textContent).then(() => reset('Copied'), fallback); } catch (e) { fallback(); }
   }));
+
+  /* ---------- voice intro ---------- */
+  const voice = document.getElementById('voice');
+  const audio = document.getElementById('voiceAudio');
+  const play = document.getElementById('voicePlay');
+  const label = document.getElementById('voiceLabel');
+  audio.volume = 0.55;
+  const setState = s => {
+    voice.classList.toggle('playing', s === 'playing');
+    play.setAttribute('aria-pressed', s === 'playing');
+    label.textContent = s === 'playing' ? 'Pause' : s === 'paused' ? 'Resume intro' : s === 'ended' ? 'Play again' : 'Hear a short intro';
+  };
+  audio.addEventListener('play', () => setState('playing'));
+  audio.addEventListener('pause', () => { if (!audio.ended) setState('paused'); });
+  audio.addEventListener('ended', () => setState('ended'));
+  play.addEventListener('click', () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+  document.getElementById('voiceClose').addEventListener('click', () => {
+    audio.pause(); voice.classList.add('gone');
+    setTimeout(() => { voice.hidden = true; }, 400);
+  });
+  /* try to start on its own; browsers that block sound until a tap just show the button */
+  const p = audio.play();
+  if (p && p.catch) p.catch(() => setState('idle'));
 })();
 </script>
 </body>
