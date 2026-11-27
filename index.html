@@ -147,10 +147,25 @@ section { padding-block: 84px; }
 .facts span:last-child { font: 12px var(--f-mono); color: var(--muted); white-space: nowrap; padding-top: 3px; }
 
 /* contact */
-.contact { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; padding: 44px; border-radius: 36px; background: linear-gradient(140deg, #fbe3e7, #f8ece6); border: 1px solid var(--line); }
+.contact { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 40px; align-items: center; padding: 48px; border-radius: 36px; background: linear-gradient(130deg, #fbe0e6, #f9ebe5 45%, #fbe3ea); background-size: 220% 220%; border: 1px solid var(--line); box-shadow: var(--shadow); animation: blush 14s ease-in-out infinite; }
+@keyframes blush { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 .contact > * { min-width: 0; }
 .contact h2 { font-size: clamp(34px, 4.6vw, 54px); font-weight: 300; letter-spacing: -.02em; }
 .contact h2 em { font-style: italic; color: var(--rose); }
+.contact-main { display: grid; gap: 18px; }
+.contact-sub { margin: -4px 0 0; color: var(--muted); font-size: 16.5px; max-width: 34em; }
+.contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-block: 6px 4px; }
+.cbtn { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 14px 22px; border-radius: 999px; text-decoration: none; font: 600 15.5px var(--f-body); color: var(--ink); background: #fff; border: 1px solid var(--petal); box-shadow: 0 12px 26px -18px rgba(139, 99, 85, .6); transition: translate .25s ease, box-shadow .25s ease; }
+.cbtn svg { width: 19px; height: 19px; flex: none; }
+.cbtn.primary { background: var(--rose); border-color: var(--rose); color: #fff; box-shadow: 0 16px 30px -14px rgba(199, 111, 138, .85); }
+.cbtn.wa { background: var(--mocha); border-color: var(--mocha); color: #fff; box-shadow: 0 16px 30px -16px rgba(90, 61, 51, .75); }
+.cbtn:hover { translate: 0 -3px; }
+.contact .links { background: rgba(255, 252, 251, .6); border: 1px solid rgba(255, 255, 255, .8); border-radius: 22px; padding: 4px 20px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.contact-art { position: relative; justify-self: center; width: min(100%, 380px); aspect-ratio: 1; mix-blend-mode: multiply; }
+.contact-art img, .contact-art video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; animation: floaty 8s ease-in-out infinite; }
+.contact-art video { opacity: 0; transition: opacity .8s ease; }
+.contact-art video.on { opacity: 1; }
+.contact-art.vid-on img { opacity: 0; transition: opacity .8s ease; }
 .links { list-style: none; margin: 0; padding: 0; display: grid; }
 .links li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 14px; border-top: 1px solid rgba(199, 111, 138, .18); flex-wrap: wrap; }
 .links li:first-child { border-top: 0; }
@@ -178,7 +193,8 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   .hero, .featured, .about, .contact { grid-template-columns: 1fr; }
   .hero { gap: 32px; padding-block: 28px 16px; }
   .featured { padding: 26px; gap: 24px; }
-  .contact { padding: 30px 24px; gap: 28px; }
+  .contact { padding: 30px 24px; gap: 20px; }
+  .contact-art { order: -1; width: min(62%, 240px); margin-block: -10px -14px; }
   .projects { grid-template-columns: 1fr; }
   section { padding-block: 60px; }
   .gallery { gap: 20px; padding-inline: 4px; }
@@ -206,6 +222,10 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   .facts span:last-child { padding-top: 0; }
   .links li { display: grid; justify-content: stretch; gap: 6px; }
   .links li.primary .val { font-size: 20px; }
+  .contact-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .cbtn { justify-content: center; padding: 13px 10px; font-size: 15px; gap: 8px; }
+  .cbtn.primary { grid-column: 1 / -1; }
+  .contact .links { padding: 2px 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn, .soc, .proj, .polaroid { transition: none; }
@@ -258,7 +278,8 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 @media (prefers-reduced-motion: reduce) {
   .hero-art img { animation: none; }
   .cover img { transition: none; }
-  .hero-art video, .cover video { display: none; }
+  .hero-art video, .cover video, .contact-art video { display: none; }
+  .contact, .contact-art img { animation: none; }
 }
 
 /* AI host: a small round talking bubble in the corner */
@@ -383,13 +404,35 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 
   <section id="contact">
     <div class="contact">
-      <h2>Have a problem worth solving? <em>Let's talk.</em></h2>
-      <ul class="links">
-        <li class="primary"><span class="k">Email</span><span class="copy-row"><span class="val" id="email">avitalde14@gmail.com</span><button class="copy" data-copy="email" type="button">Copy</button></span></li>
-        <li class="primary"><span class="k">Phone</span><span class="copy-row"><span class="val" id="phone">+972-54-333-4067</span><button class="copy" data-copy="phone" type="button">Copy</button></span></li>
-        <li><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/avital-debachar" target="_blank" rel="noopener">in/avital-debachar ↗</a></li>
-        <li><span class="k">GitHub</span><a href="https://github.com/avitalde13" target="_blank" rel="noopener">@avitalde13 ↗</a></li>
-      </ul>
+      <div class="contact-main">
+        <span class="live" style="justify-self: start">OPEN TO FORWARD DEPLOYED ENGINEER ROLES</span>
+        <h2>Have a problem worth solving? <em>Let's talk.</em></h2>
+        <p class="contact-sub">Email or WhatsApp is the fastest way to reach me, and my CV is one click away.</p>
+        <div class="contact-actions">
+          <a class="cbtn primary" href="mailto:avitalde14@gmail.com?subject=Hi%20Avital">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M3.5 6.5h17v11h-17zM3.8 7l8.2 6.2L20.2 7"/></svg>
+            Email me
+          </a>
+          <a class="cbtn wa" href="https://wa.me/972543334067" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.4 14.6L2.3 21.7l5-1.3A9.7 9.7 0 1 0 12 2.2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 19.9Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.2-.2-.5-.3Z"/></svg>
+            WhatsApp
+          </a>
+          <a class="cbtn" href="cv/Avital-DeBachar-CV-FDE.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14"/></svg>
+            Download CV
+          </a>
+        </div>
+        <ul class="links">
+          <li class="primary"><span class="k">Email</span><span class="copy-row"><span class="val" id="email">avitalde14@gmail.com</span><button class="copy" data-copy="email" type="button">Copy</button></span></li>
+          <li class="primary"><span class="k">Phone</span><span class="copy-row"><span class="val" id="phone">+972-54-333-4067</span><button class="copy" data-copy="phone" type="button">Copy</button></span></li>
+          <li><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/avital-debachar" target="_blank" rel="noopener">in/avital-debachar ↗</a></li>
+          <li><span class="k">GitHub</span><a href="https://github.com/avitalde13" target="_blank" rel="noopener">@avitalde13 ↗</a></li>
+        </ul>
+      </div>
+      <div class="contact-art" aria-hidden="true">
+        <img src="img/contact.jpg" alt="" loading="lazy">
+        <video data-src="vid/contact.mp4" muted loop playsinline preload="none"></video>
+      </div>
     </div>
   </section>
 
@@ -528,6 +571,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   mark('.skill', 'pop', .035);
   mark('.facts li', 'right', .08);
   mark('.contact', 'zoom');
+  mark('.cbtn', 'pop', .09);
   mark('.polaroid', 'pop', .12);
   if (animated) {
     const io = new IntersectionObserver(entries => entries.forEach(e => {
@@ -566,7 +610,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
       if (e.isIntersecting) {
         if (!v.src) {
           v.src = v.dataset.src;
-          v.addEventListener('playing', () => { v.classList.add('on'); v.closest('.hero-art')?.classList.add('vid-on'); }, { once: true });
+          v.addEventListener('playing', () => { v.classList.add('on'); v.closest('.hero-art, .contact-art')?.classList.add('vid-on'); }, { once: true });
         }
         v.play().catch(() => {});
       } else if (v.src) v.pause();
