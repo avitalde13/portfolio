@@ -73,7 +73,7 @@ h1, h2, h3 { font-family: var(--f-display); font-variation-settings: "SOFT" 100;
 .top nav a:hover { background: var(--bg-2); }
 
 /* hero */
-.hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: start; padding-block: 36px 28px; }
+.hero { display: block; max-width: 820px; padding-block: 36px 28px; }
 .hero > * { min-width: 0; }
 .hero h1 { font-size: clamp(42px, 6.2vw, 74px); font-weight: 300; letter-spacing: -.02em; margin-block: 22px 28px; }
 .hero h1 em { font-style: italic; color: var(--rose); font-weight: 400; }
@@ -93,28 +93,6 @@ h1, h2, h3 { font-family: var(--f-display); font-variation-settings: "SOFT" 100;
 .reach span { user-select: all; }
 .reach b { font: 500 11px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-right: 8px; user-select: none; }
 
-/* console: a soft paper card */
-.console { background: var(--card); border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); font: 13px/1.75 var(--f-mono); overflow: hidden; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.console-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; color: var(--muted); font-size: 12px; border-bottom: 1px solid var(--line); }
-.console-bar .lights { display: flex; gap: 6px; }
-.console-bar .lights i { width: 9px; height: 9px; border-radius: 50%; background: var(--petal); display: block; }
-.console-bar .lights i:nth-child(2) { background: #f0d6c4; }
-.console-bar .lights i:nth-child(3) { background: #e3d3cf; }
-.consoles { display: grid; gap: 18px; min-width: 0; }
-.console-purpose { margin: 0; padding: 14px 22px 0; font: 14.5px/1.55 var(--f-body); color: var(--ink); }
-.console.small .log { min-height: 0; }
-.asks { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 20px 4px; }
-.ask { font: 500 12px var(--f-mono); color: var(--ink); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; cursor: pointer; transition: background .2s, border-color .2s; }
-.ask:hover { border-color: var(--petal); }
-.ask[aria-pressed="true"] { background: var(--petal); border-color: var(--petal); }
-.log { padding: 10px 22px 20px; min-height: 172px; overflow-x: auto; color: var(--ink); }
-.log p { margin: 0; white-space: pre-wrap; }
-.log .p { color: var(--muted); }
-.log .c { color: var(--mocha); }
-.log .g { color: var(--rose); font-weight: 500; }
-.caret { display: inline-block; width: .55em; height: 1.05em; background: var(--rose); vertical-align: -2px; border-radius: 2px; }
-@media (prefers-reduced-motion: no-preference) { .caret { animation: blink 1s steps(1) infinite; } }
-@keyframes blink { 50% { opacity: 0; } }
 
 /* sections */
 section { padding-block: 84px; }
@@ -198,7 +176,6 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 @media (max-width: 860px) {
   .hero, .featured, .about, .contact { grid-template-columns: 1fr; }
   .hero { gap: 32px; padding-block: 28px 16px; }
-  .console.small { display: none; }
   .featured { padding: 26px; gap: 24px; }
   .contact { padding: 30px 24px; gap: 28px; }
   .projects { grid-template-columns: 1fr; }
@@ -218,7 +195,6 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   .social { grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 0 20px; }
   .soc { padding: 15px 12px; font-size: 16px; gap: 10px; }
   .reach { flex-direction: column; gap: 6px; }
-  .console { border-radius: 22px; }
   .featured { padding: 22px 20px; border-radius: 26px; }
   .proj { padding: 20px; border-radius: 22px; }
   section { padding-block: 48px; }
@@ -271,38 +247,6 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
       <div class="reach">
         <div><b>Email</b><span>avitalde14@gmail.com</span></div>
         <div><b>Phone</b><span>+972-54-333-4067</span></div>
-      </div>
-    </div>
-
-    <div class="consoles">
-      <div class="console" data-console="greenlight" aria-label="Greenlight demo console">
-        <div class="console-bar">
-          <span class="lights"><i></i><i></i><i></i></span>
-          <span>greenlight</span>
-          <span id="clock">IL time</span>
-        </div>
-        <p class="console-purpose">Company approvals get lost in emails and spreadsheets. Greenlight puts every request in one place and sends it to the right people.</p>
-        <div class="asks" role="group" aria-label="Pick a question">
-          <button class="ask" data-k="route" aria-pressed="true">"Who approves this?"</button>
-          <button class="ask" data-k="risk" aria-pressed="false">"Is this risky?"</button>
-          <button class="ask" data-k="budget" aria-pressed="false">"Are we over budget?"</button>
-        </div>
-        <div class="log" aria-live="polite"></div>
-      </div>
-
-      <div class="console small" data-console="nook" aria-label="Nook Café demo console">
-        <div class="console-bar">
-          <span class="lights"><i></i><i></i><i></i></span>
-          <span>nook-cafe</span>
-          <span></span>
-        </div>
-        <p class="console-purpose">Guests leave feedback from a QR code on the table, and the café sees it all in one private dashboard.</p>
-        <div class="asks" role="group" aria-label="Pick a request">
-          <button class="ask" data-k="feedback" aria-pressed="true">"Guests can't leave feedback"</button>
-          <button class="ask" data-k="owner" aria-pressed="false">"I need to see reviews"</button>
-          <button class="ask" data-k="secure" aria-pressed="false">"Keep it private"</button>
-        </div>
-        <div class="log" aria-live="polite"></div>
       </div>
     </div>
   </div>
@@ -400,94 +344,6 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 
 <script>
 (() => {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const clock = document.getElementById('clock');
-  const tick = () => {
-    try { clock.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jerusalem' }).format(new Date()) + ' IL'; }
-    catch (e) { clock.textContent = 'IL time'; }
-  };
-  tick(); setInterval(tick, 30000);
-
-  /* ---------- consoles ---------- */
-  const scripts = {
-    route: [
-      ['p', '$ new request: laptop · $2,400 · hardware'],
-      ['c', '▸ chain: Manager → Finance (over $1,000)'],
-      ['c', '▸ email + Slack to the manager'],
-      ['c', '▸ manager approves → moves to Finance'],
-      ['g', '✔ approved, every step in the audit log'],
-    ],
-    risk: [
-      ['p', '$ new request: software · $4,950 · new vendor'],
-      ['c', '▸ rule: first time with this vendor'],
-      ['c', '▸ rule: just under the $5,000 VP limit'],
-      ['c', '▸ Claude: medium risk, "vague justification"'],
-      ['g', '✔ flagged for the approver to review'],
-    ],
-    budget: [
-      ['p', '$ expense: team offsite · $3,200'],
-      ['c', '▸ department budget: 84% used this quarter'],
-      ['c', '▸ 80% budget alert sent to Admins'],
-      ['g', '✔ approver sees it before deciding'],
-    ],
-    feedback: [
-      ['p', '$ claude "guests scan a QR code and leave a rating and comment"'],
-      ['c', '▸ POST /api/feedback, public review list'],
-      ['c', '▸ phone numbers stay private'],
-      ['p', '$ railway up'],
-      ['g', '✔ live at /feedback'],
-    ],
-    owner: [
-      ['p', '$ claude "owner dashboard: average rating, filter, delete"'],
-      ['c', '▸ admin-only GET and DELETE routes'],
-      ['c', '▸ reviews show phone and photo to the owner only'],
-      ['p', '$ railway up'],
-      ['g', '✔ dashboard live at /admin'],
-    ],
-    secure: [
-      ['p', '$ claude "email + password login, owner sets their own password"'],
-      ['c', '▸ scrypt-hashed password, HttpOnly cookie'],
-      ['c', '▸ lockout after 5 wrong tries'],
-      ['p', '$ railway up'],
-      ['g', '✔ locked down'],
-    ],
-  };
-  document.querySelectorAll('[data-console]').forEach(box => {
-  const log = box.querySelector('.log');
-  let run = 0;
-  const caret = () => { const c = document.createElement('p'); c.innerHTML = '<span class="caret"></span>'; log.appendChild(c); };
-  function render(key, animate) {
-    const id = ++run;
-    const lines = scripts[key];
-    log.innerHTML = '';
-    if (!animate || reduce) {
-      lines.forEach(([cls, t]) => { const p = document.createElement('p'); p.className = cls; p.textContent = t; log.appendChild(p); });
-      caret(); return;
-    }
-    let i = 0;
-    const next = () => {
-      if (id !== run) return;
-      if (i >= lines.length) { caret(); return; }
-      const [cls, t] = lines[i++];
-      const p = document.createElement('p'); p.className = cls; log.appendChild(p);
-      let j = 0;
-      const type = () => {
-        if (id !== run) return;
-        p.textContent = t.slice(0, ++j);
-        if (j < t.length) setTimeout(type, cls === 'p' ? 14 : 6); else setTimeout(next, 240);
-      };
-      type();
-    };
-    next();
-  }
-  const asks = box.querySelectorAll('.ask');
-  asks.forEach(b => b.addEventListener('click', () => {
-    asks.forEach(x => x.setAttribute('aria-pressed', x === b));
-    render(b.dataset.k, true);
-  }));
-  render(asks[0].dataset.k, false);
-  });
 
   /* ---------- projects ---------- */
   const projects = [
