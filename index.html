@@ -220,12 +220,18 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 .hero-art::before { content: ""; position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(244, 195, 207, .75), rgba(249, 230, 232, 0) 70%); filter: blur(10px); }
 .hero-art-inner { position: relative; width: 100%; height: 100%; will-change: transform; }
 .hero-art img { width: 100%; height: auto; display: block; animation: floaty 7s ease-in-out infinite; filter: drop-shadow(0 30px 40px rgba(139, 99, 85, .18)); }
+.hero-art video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity .8s ease; animation: floaty 7s ease-in-out infinite; }
+.hero-art video.on { opacity: 1; }
+.hero-art.vid-on img { opacity: 0; transition: opacity .8s ease; }
+.hero-art.vid-on .hero-art-inner { mix-blend-mode: multiply; }
 @keyframes floaty { 0%, 100% { transform: translateY(0) rotate(-1.2deg); } 50% { transform: translateY(-16px) rotate(1.2deg); } }
 
 /* ---------- project covers ---------- */
 .cover { position: relative; overflow: hidden; border-radius: 18px; aspect-ratio: 16 / 9; background: var(--bg-2); margin-bottom: 14px; }
-.cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: translateY(var(--py, 0px)) scale(var(--zs, 1.08)); transition: transform .9s cubic-bezier(.2, .7, .2, 1); }
-.proj:hover .cover img, .featured:hover .cover img { --zs: 1.14; }
+.cover img, .cover video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: translateY(var(--py, 0px)) scale(var(--zs, 1.08)); transition: transform .9s cubic-bezier(.2, .7, .2, 1), opacity .7s ease; }
+.cover video { opacity: 0; }
+.cover video.on { opacity: 1; }
+.proj:hover .cover, .featured:hover .cover { --zs: 1.14; }
 .proj > :not(.cover) { padding-inline: 12px; }
 .proj:last-child:nth-child(odd) .cover { aspect-ratio: 2 / 1; }
 .featured .cover { grid-column: 1 / -1; aspect-ratio: 2 / 1; border-radius: 22px; margin-bottom: 0; }
@@ -252,24 +258,25 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
 @media (prefers-reduced-motion: reduce) {
   .hero-art img { animation: none; }
   .cover img { transition: none; }
+  .hero-art video, .cover video { display: none; }
 }
 
 /* AI host: a small round talking bubble in the corner */
 .host { position: fixed; z-index: 20; right: max(20px, env(safe-area-inset-right, 0px)); bottom: max(20px, env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: opacity .4s ease, transform .4s ease; }
 .host[hidden] { display: none; }
 .host.gone { opacity: 0; transform: translateY(14px) scale(.96); pointer-events: none; }
-.host-face { position: relative; width: 132px; height: 132px; border-radius: 50%; padding: 0; border: 3px solid #fff; overflow: hidden; cursor: pointer; background: var(--petal); box-shadow: 0 0 0 2px var(--petal), var(--shadow); }
+.host-face { position: relative; width: 184px; height: 184px; border-radius: 50%; padding: 0; border: 3px solid #fff; overflow: hidden; cursor: pointer; background: var(--petal); box-shadow: 0 0 0 2px var(--petal), var(--shadow); }
 .host-face video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .host.talking .host-face { box-shadow: 0 0 0 2px var(--rose), var(--shadow); animation: halo 2.2s ease-in-out infinite; }
 @keyframes halo { 0%, 100% { box-shadow: 0 0 0 2px var(--rose), 0 0 0 0 rgba(199, 111, 138, .35), var(--shadow); } 50% { box-shadow: 0 0 0 2px var(--rose), 0 0 0 10px rgba(199, 111, 138, 0), var(--shadow); } }
-.host-tag { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); background: rgba(255, 252, 251, .9); color: var(--mocha); font: 600 10px var(--f-body); letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
+.host-tag { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); background: rgba(255, 252, 251, .9); color: var(--mocha); font: 600 10px var(--f-body); letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
 .host-bar { display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(255, 252, 251, .92); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-.host-btn { border: 0; cursor: pointer; background: var(--rose); color: #fff; font: 600 13px var(--f-body); padding: 7px 14px; border-radius: 999px; white-space: nowrap; }
+.host-btn { border: 0; cursor: pointer; background: var(--rose); color: #fff; font: 600 14px var(--f-body); padding: 8px 16px; border-radius: 999px; white-space: nowrap; }
 .host-x { border: 0; background: transparent; color: var(--muted); width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 17px; line-height: 1; }
 .host-x:hover { background: var(--bg-2); }
 @media (max-width: 560px) {
   .host { right: 14px; bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
-  .host-face { width: 96px; height: 96px; }
+  .host-face { width: 128px; height: 128px; }
   .host-tag { font-size: 9px; bottom: 5px; padding: 2px 6px; }
   .host-btn { font-size: 12px; padding: 6px 12px; }
 }
@@ -315,7 +322,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
       </div>
     </div>
     <div class="hero-art" data-reveal="zoom" style="--d:.35s" aria-hidden="true">
-      <div class="hero-art-inner" id="heroArt"><img src="img/hero.png" alt="" width="720" height="720"></div>
+      <div class="hero-art-inner" id="heroArt"><img src="img/hero.png" alt="" width="720" height="720"><video data-src="vid/hero.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
     </div>
   </div>
 
@@ -326,7 +333,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
     </div>
 
     <article class="featured">
-      <div class="cover"><img src="img/greenlight.jpg" alt="Illustration of request cards flowing into an approval checkmark" loading="lazy"></div>
+      <div class="cover"><img src="img/greenlight.jpg" alt="Illustration of request cards flowing into an approval checkmark" loading="lazy"><video data-src="vid/greenlight.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
       <div>
         <span class="live">LIVE · FEATURED PROJECT</span>
         <h3>Greenlight</h3>
@@ -488,7 +495,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   document.getElementById('projects').innerHTML = projects.map(p => `
     <article class="proj">
-      ${p.img ? `<div class="cover"><img src="${p.img}" alt="${esc(p.alt)}" loading="lazy"></div>` : ''}
+      ${p.img ? `<div class="cover"><img src="${p.img}" alt="${esc(p.alt)}" loading="lazy"><video data-src="${p.img.replace('img/', 'vid/').replace('.jpg', '.mp4')}" muted loop playsinline preload="none" aria-hidden="true"></video></div>` : ''}
       <div class="proj-head"><h3>${esc(p.name)}</h3><span class="yr">${esc(p.tag ? p.tag + ' · ' + p.year : p.year)}</span></div>
       <p>${esc(p.blurb)}</p>
       <ul class="ship-list small">${p.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
@@ -532,7 +539,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   }
   const bar = document.getElementById('progress');
   const art = document.getElementById('heroArt');
-  const covers = [...document.querySelectorAll('.cover img')];
+  const covers = [...document.querySelectorAll('.cover')];
   let ticking = false;
   const frame = () => {
     ticking = false;
@@ -541,7 +548,7 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
     if (!animated) return;
     if (y < innerHeight * 1.2) art.style.transform = `translateY(${y * -.14}px) rotate(${y * .012}deg)`;
     covers.forEach(img => {
-      const r = img.parentElement.getBoundingClientRect();
+      const r = img.getBoundingClientRect();
       if (r.bottom < 0 || r.top > innerHeight) return;
       img.style.setProperty('--py', ((r.top + r.height / 2 - innerHeight / 2) * -.04).toFixed(1) + 'px');
     });
@@ -550,6 +557,22 @@ footer { padding-block: 40px 48px; font: 12px var(--f-mono); color: var(--muted)
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', onScroll);
   frame();
+
+  /* ---------- Higgsfield loops: load when near, play only while visible ---------- */
+  const loops = [...document.querySelectorAll('video[data-src]')];
+  if (animated && loops.length) {
+    const vio = new IntersectionObserver(entries => entries.forEach(e => {
+      const v = e.target;
+      if (e.isIntersecting) {
+        if (!v.src) {
+          v.src = v.dataset.src;
+          v.addEventListener('playing', () => { v.classList.add('on'); v.closest('.hero-art')?.classList.add('vid-on'); }, { once: true });
+        }
+        v.play().catch(() => {});
+      } else if (v.src) v.pause();
+    }), { rootMargin: '200px 0px' });
+    loops.forEach(v => vio.observe(v));
+  }
 
   /* ---------- AI host ---------- */
   const host = document.getElementById('host');
